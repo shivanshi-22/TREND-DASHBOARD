@@ -1,8 +1,5 @@
-'use client';
-import React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline, Box, Grid, AppBar, Toolbar, Typography, Container, Paper, Fade } from '@mui/material';
-import { BarChart3, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BarChart3 } from 'lucide-react';
 import { MetricCard } from './components/MetricCard';
 import { RevenueChart } from './components/RevenueChart';
 import { ProductPerformance } from './components/ProductPerformance';
@@ -11,169 +8,99 @@ import { CustomerTable } from './components/CustomerTable';
 import { OrdersChart } from './components/OrdersChart';
 import { metricsData } from './data/mockData';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#6366f1',
-    },
-    secondary: {
-      main: '#f59e0b',
-    },
-    background: {
-      default: '#f8f9fa',
-    },
-    text: {
-      primary: '#1f2937',
-      secondary: '#6b7280',
-    },
-  },
-  typography: {
-    fontFamily: '"Inter", "SF Pro Display", "Roboto", "Helvetica", "Arial", sans-serif',
-    h4: {
-      fontWeight: 800,
-      letterSpacing: '-0.02em',
-    },
-    h6: {
-      fontWeight: 700,
-      letterSpacing: '-0.01em',
-    },
-  },
-  components: {
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          borderRadius: 20,
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
-          background: 'rgba(255, 255, 255, 0.95)',
-        },
-      },
-    },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-          backdropFilter: 'blur(20px)',
-          background: 'rgba(255, 255, 255, 0.9)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
-        },
-      },
-    },
-  },
-});
-
 function App() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Box sx={{ 
-        flexGrow: 1,
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%)',
-          pointerEvents: 'none',
-        }
-      }}>
-        <AppBar position="static" color="inherit">
-          <Toolbar sx={{ py: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1 }}>
-              <Box sx={{ 
-                p: 1.5, 
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                borderRadius: 3,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 14px 0 rgba(99, 102, 241, 0.4)',
-              }}>
-                <BarChart3 color="white" size={28} />
-              </Box>
-              <Typography variant="h5" sx={{ 
-                fontWeight: 800, 
-                background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                letterSpacing: '-0.02em'
-              }}>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 relative">
+      {/* Background overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-pink-500/20"></div>
+      
+      {/* Header */}
+      <div className="relative z-10 bg-white/90 backdrop-blur-lg border-b border-white/20 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg">
+                <BarChart3 className="h-8 w-8 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Analytics Dashboard
-              </Typography>
-            </Box>
-          </Toolbar>
-        </AppBar>
-        
-        <Container maxWidth="xl" sx={{ py: 4, position: 'relative', zIndex: 1 }}>
-          <Fade in timeout={800}>
-            <Grid container spacing={4}>
-              {/* Metrics Cards */}
-              {metricsData.map((metric, index) => (
-                <Grid item xs={12} sm={6} md={3} key={index}>
-                  <Fade in timeout={1000 + index * 200}>
-                    <div>
-                      <MetricCard {...metric} />
-                    </div>
-                  </Fade>
-                </Grid>
-              ))}
-              
-              {/* Revenue Chart */}
-              <Grid item xs={12} lg={8}>
-                <Fade in timeout={1800}>
-                  <div>
-                    <RevenueChart />
-                  </div>
-                </Fade>
-              </Grid>
-              
-              {/* Region Chart */}
-              <Grid item xs={12} lg={4}>
-                <Fade in timeout={2000}>
-                  <div>
-                    <RegionChart />
-                  </div>
-                </Fade>
-              </Grid>
-              
-              {/* Orders Chart */}
-              <Grid item xs={12} lg={8}>
-                <Fade in timeout={2200}>
-                  <div>
-                    <OrdersChart />
-                  </div>
-                </Fade>
-              </Grid>
-              
-              {/* Product Performance */}
-              <Grid item xs={12} lg={4}>
-                <Fade in timeout={2400}>
-                  <div>
-                    <ProductPerformance />
-                  </div>
-                </Fade>
-              </Grid>
-              
-              {/* Customer Table */}
-              <Grid item xs={12}>
-                <Fade in timeout={2600}>
-                  <div>
-                    <CustomerTable />
-                  </div>
-                </Fade>
-              </Grid>
-            </Grid>
-          </Fade>
-        </Container>
-      </Box>
-    </ThemeProvider>
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className={`transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          
+          {/* Metrics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {metricsData.map((metric, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <MetricCard {...metric} />
+              </div>
+            ))}
+          </div>
+
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Revenue Chart - spans 2 columns */}
+            <div
+              className={`lg:col-span-2 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ transitionDelay: '500ms' }}
+            >
+              <RevenueChart />
+            </div>
+
+            {/* Region Chart */}
+            <div
+              className={`transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ transitionDelay: '600ms' }}
+            >
+              <RegionChart />
+            </div>
+          </div>
+
+          {/* Second row of charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Orders Chart - spans 2 columns */}
+            <div
+              className={`lg:col-span-2 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ transitionDelay: '700ms' }}
+            >
+              <OrdersChart />
+            </div>
+
+            {/* Product Performance */}
+            <div
+              className={`transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              style={{ transitionDelay: '800ms' }}
+            >
+              <ProductPerformance />
+            </div>
+          </div>
+
+          {/* Customer Table */}
+          <div
+            className={`transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+            style={{ transitionDelay: '900ms' }}
+          >
+            <CustomerTable />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
